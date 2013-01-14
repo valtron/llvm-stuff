@@ -7,6 +7,8 @@
 %lex-param   { Parser::OwlLexer& lexer }
 
 %code requires {
+	#include "../Sem.hpp"
+	
 	// Forward-declare the Scanner class; the Parser needs to be assigned a 
 	// Scanner, but the Scanner can't be declared without the Parser
 	namespace Parser {
@@ -20,7 +22,7 @@
 }
 
 %{
-	#include "Sem.hpp"
+	#include "../Sem.hpp"
 %}
 
 %token ID NUM

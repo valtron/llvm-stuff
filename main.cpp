@@ -1,14 +1,16 @@
-#include <llvm/DerivedTypes.h>
+/*#include <llvm/DerivedTypes.h>
 #include <llvm/LLVMContext.h>
 #include <llvm/Module.h>
-#include <llvm/Analysis/Verifier.h>
+#include <llvm/Analysis/Verifier.h>*/
+
+#include "Parser/owl.tab.hh"
 
 int main(int argc, char** argv)
 {
-	llvm::LLVMContext& ctxt = llvm::getGlobalContext();
+	/*llvm::LLVMContext& ctxt = llvm::getGlobalContext();
 	llvm::Module* module = new llvm::Module("test", ctxt);
 	module->dump();
-	delete module;
+	delete module;*/
 	
 	return 0;
 }

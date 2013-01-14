@@ -1,5 +1,5 @@
 namespace Sem
 {
-	class Expr {}
-	class Stmt {}
+	class Expr {};
+	class Stmt {};
 }
