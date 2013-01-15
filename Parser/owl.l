@@ -7,7 +7,7 @@
 
 %{
 	#include "OwlParser.hpp"
-	#include "Owl.tab.h"
+	#include "owl.tab.h"
 	
 	#define YY_EXTRA_TYPE Parser::OwlParser*
 	#define YY_USER_ACTION yylloc->first_line = yylineno;
