@@ -8,18 +8,33 @@ LD := g++
 LDFLAGS := -static-libgcc -static-libstdc++
 BINDIR = bin
 
-test: exec_main
+test: $(BINDIR)/main.exe
 	@$(BINDIR)/main.exe
 
-exec_main: bindir parser
-	@$(CXX) $(CXXFLAGS) main.cpp -o $(BINDIR)/main.o
-	@$(LD) $(BINDIR)/main.o $(LDFLAGS) -o $(BINDIR)/main.exe
+$(BINDIR)/main.exe: bindir $(BINDIR)/main.o $(BINDIR)/Parser/lex.owl.o $(BINDIR)/Parser/owl.tab.o
+	@$(LD) $(LDFLAGS) -o $(BINDIR)/main.exe $(BINDIR)/main.o $(BINDIR)/Parser/lex.owl.o $(BINDIR)/Parser/owl.tab.o
 
 bindir:
 	@mkdir -p $(BINDIR)
+	@mkdir -p $(BINDIR)/Parser
 
-parser: Parser/owl.tab.hh
+$(BINDIR)/main.o: main.cpp
+	@$(CXX) $(CXXFLAGS) -o $(BINDIR)/main.o main.cpp
 
-Parser/owl.tab.hh: Parser/owl.yy Parser/owl.l
-	@flex --outfile=Parser/lex.yy.cc --header-file=OwlLexer.hpp Parser/owl.l
-	@bison --file-prefix=Parser/owl Parser/owl.yy
+$(BINDIR)/Parser/lex.owl.o: Parser/lex.owl.c Parser/owl.tab.h
+	@$(CXX) $(CXXFLAGS) -o $(BINDIR)/Parser/lex.owl.o Parser/lex.owl.c
+
+Parser/lex.owl.c: Parser/Owl.l
+	@flex --outfile=Parser/lex.owl.c Parser/owl.l
+
+$(BINDIR)/Parser/owl.tab.o: Parser/Owl.tab.c
+	@$(CXX) $(CXXFLAGS) -o $(BINDIR)/Parser/owl.tab.o Parser/owl.tab.c
+
+Parser/owl.tab.c Parser/owl.tab.h: Parser/owl.y
+	@bison --file-prefix=Parser/owl Parser/owl.y
+
+.PHONY: clean
+clean:
+	rm -f $(BINDIR)/*.exe
+	rm -f $(BINDIR)/*.o $(BINDIR)/Parser/*.o
+	rm -f Parser/owl.tab.c Parser/owl.tab.h Parser/lex.owl.c

@@ -1,29 +1,11 @@
-%skeleton "lalr1.cc"
-
-%defines
-%define namespace "Parser"
-%define parser_class_name "OwlParser"
-%parse-param { Parser::OwlLexer& lexer }
-%lex-param   { Parser::OwlLexer& lexer }
-
-%code requires {
-	#include "../Sem.hpp"
-	
-	// Forward-declare the Scanner class; the Parser needs to be assigned a 
-	// Scanner, but the Scanner can't be declared without the Parser
-	namespace Parser {
-		class OwlLexer;
-	}
-}
-
-%code {
-	// Prototype for the yylex function
-	static int yylex(Parser::OwlParser::semantic_type * yylval, Parser::OwlLexer &lexer);
-}
-
 %{
 	#include "../Sem.hpp"
 %}
+
+%pure-parser
+%locations
+%defines
+%error-verbose
 
 %token ID NUM
 
