@@ -25,10 +25,17 @@
 	}
 %}
 
+alpha	[a-zA-Z_]
+digit	[0-9]
+alnum	({alpha}|{digit})
+ws		[ \t\v\n\f\r]
+
 %%
 
-"a"	yylval->n = 1; return A;
-"b"	yylval->n = 2; return B;
+{alpha}{alnum}*"'"?	return ID;
+{digit}+						return NUM;
+ws									/* skip */;
+.										/* ignore */;
 
 %%
 

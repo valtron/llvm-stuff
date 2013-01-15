@@ -6,35 +6,30 @@ LD := g++
 #LLVM_LDFLAGS = $(shell llvm-config --libs core) $(shell llvm-config --ldflags)
 #LDFLAGS := -static-libgcc -static-libstdc++ $(LLVM_LDFLAGS)
 LDFLAGS := -static-libgcc -static-libstdc++
-BINDIR = bin
+CSRCS=Parser/lex.owl.c Parser/owl.tab.c
+CXXSRCS=main.cpp Sem/Builder.cpp Sem/Code.cpp Sem/Suite.cpp
+SRCS=$(CSRCS) $(CXXSRCS)
+OBJS=$(CSRCS:.c=.o) $(CXXSRCS:.cpp=.o)
+MAIN=main.exe
 
-test: $(BINDIR)/main.exe
-	@$(BINDIR)/main.exe
+test: $(MAIN)
+	@$(MAIN)
 
-$(BINDIR)/main.exe: bindir $(BINDIR)/main.o $(BINDIR)/Parser/lex.owl.o $(BINDIR)/Parser/owl.tab.o
-	@$(LD) $(LDFLAGS) -o $(BINDIR)/main.exe $(BINDIR)/main.o $(BINDIR)/Parser/lex.owl.o $(BINDIR)/Parser/owl.tab.o
+main.exe: $(OBJS)
+	@$(LD) $(LDFLAGS) -o $(MAIN) $(OBJS)
 
-bindir:
-	@mkdir -p $(BINDIR)
-	@mkdir -p $(BINDIR)/Parser
+.cpp.o:
+	@$(CXX) -c $< $(CXXFLAGS) -std=c++0x -o $@
 
-$(BINDIR)/main.o: main.cpp
-	@$(CXX) $(CXXFLAGS) -o $(BINDIR)/main.o main.cpp
+.c.o:
+	@$(CXX) -c $< $(CXXFLAGS) -Wno-error -Wno-all -Wno-fatal-errors -o $@
 
-$(BINDIR)/Parser/lex.owl.o: Parser/lex.owl.c Parser/owl.tab.h
-	@$(CXX) $(CXXFLAGS) -o $(BINDIR)/Parser/lex.owl.o Parser/lex.owl.c
-
-Parser/lex.owl.c: Parser/Owl.l
+Parser/lex.owl.c: Parser/Owl.l Parser/owl.tab.h
 	@flex --outfile=Parser/lex.owl.c Parser/owl.l
-
-$(BINDIR)/Parser/owl.tab.o: Parser/Owl.tab.c
-	@$(CXX) $(CXXFLAGS) -o $(BINDIR)/Parser/owl.tab.o Parser/owl.tab.c
 
 Parser/owl.tab.c Parser/owl.tab.h: Parser/owl.y
 	@bison --file-prefix=Parser/owl Parser/owl.y
 
-.PHONY: clean
 clean:
-	rm -f $(BINDIR)/*.exe
-	rm -f $(BINDIR)/*.o $(BINDIR)/Parser/*.o
-	rm -f Parser/owl.tab.c Parser/owl.tab.h Parser/lex.owl.c
+	rm -v `find . \( -name "*.o" -o -name "*.exe" \)`
+	rm -vf Parser/owl.tab.c Parser/owl.tab.h Parser/lex.owl.c

@@ -1,0 +1,15 @@
+module Foo.Bar {
+	use OS.Path;
+	
+	int baz(bool c, int x, int y) {
+		if c {
+			ret x;
+		} else {
+			ret y;
+		}
+	}
+	
+	module Boo {}
+}
+
+module Cool {}

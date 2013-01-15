@@ -2,6 +2,11 @@
 
 #include <istream>
 
+namespace Sem
+{
+	class PackageBuilder;
+}
+
 namespace Parser
 {
 	class OwlParser;
@@ -16,14 +21,15 @@ class OwlParser
 {
 public:
 	void* scanner;
+	Sem::PackageBuilder* builder;
 	int result;
 	std::istream* is;
 	
 public:
-	OwlParser(std::istream* is)
+	OwlParser(Sem::PackageBuilder* builder, std::istream* is)
+		: builder(builder), is(is)
 	{
 		this->init_scanner();
-		this->is = is;
 	}
 	
 	bool parse()

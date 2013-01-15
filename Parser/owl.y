@@ -1,5 +1,5 @@
 %code requires {
-	#include "../Sem.hpp"
+	#include "../Sem/Code.hpp"
 }
 
 %pure-parser
@@ -14,14 +14,9 @@
 {
 	Sem::Stmt* stmt;
 	Sem::Expr* expr;
-	int n;
 }
 
 %token ID NUM
-%token <n> A
-%token <n> B
-
-%type <n> X
 
 %type <stmt> r_stmt r_block r_if r_ret r_var r_assign r_loop r_stmt_list r_if_else
 %type <expr> r_expr r_expr_opt r_ident
@@ -45,16 +40,6 @@
 %}
 
 %%
-
-start
-	: X { parser->result = $1; }
-;
-
-X
-	: A X { $$ = $1 + $2; }
-	| B X { $$ = $1 + $2; }
-	| { $$ = 0; }
-;
 
 r_unit
 	: r_suite_list

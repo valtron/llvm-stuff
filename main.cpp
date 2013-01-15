@@ -1,12 +1,9 @@
-#include <iostream>
-#include "Parser/OwlParser.hpp"
+#include "Sem/Builder.hpp"
 
 int main()
 {
-	Parser::OwlParser parser(&std::cin);
+	Sem::PackageBuilder builder("test", "0.0.0");
+	builder.parse("test.owl");
 	
-	if (parser.parse())
-	{
-		std::cout << parser.result << std::endl;
-	}
+	return 0;
 }
