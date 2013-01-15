@@ -18,6 +18,8 @@ exec_main: bindir parser
 bindir:
 	@mkdir -p $(BINDIR)
 
-parser: Parser/owl.yy Parser/owl.l
-	@flex --outfile=Parser/lex.yy.cc Parser/owl.l
+parser: Parser/owl.tab.hh
+
+Parser/owl.tab.hh: Parser/owl.yy Parser/owl.l
+	@flex --outfile=Parser/lex.yy.cc --header-file=OwlLexer.hpp Parser/owl.l
 	@bison --file-prefix=Parser/owl Parser/owl.yy

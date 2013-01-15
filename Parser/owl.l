@@ -1,5 +1,5 @@
 %{
-	#include "Parser/OwlLexer.hpp"
+	#include "owl.tab.hh"
 %}
 
 %option nodefault yyclass="OwlLexer" noyywrap c++
