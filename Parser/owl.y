@@ -2,7 +2,7 @@
 	#include "../Sem/Code.hpp"
 }
 
-%pure-parser
+%define api.pure
 %name-prefix="owl"
 %locations
 %defines
@@ -18,13 +18,30 @@
 
 %token ID NUM
 
+%token T_BCL "{"
+%token T_BCR "}"
+%token T_BRL "("
+%token T_BRR ")"
+%token T_SEMI ";"
+%token T_COMMA ","
+%token T_DOT "."
+%token T_MODULE "module"
+%token T_USE "use"
+%token T_FN "fn"
+%token T_MY "my"
+%token T_IF "if"
+%token T_RET "ret"
+%token T_LOOP "loop"
+%token T_ELSE "else"
+%token END 0 "end of file"
+
 %type <stmt> r_stmt r_block r_if r_ret r_var r_assign r_loop r_stmt_list r_if_else
 %type <expr> r_expr r_expr_opt r_ident
 
-%left '+' '-'
-%left '*' '/'
-%right '^'
-%left '~'
+%left "+" "-"
+%left "*" "/"
+%right "^"
+%left "~"
 
 %{
 	#include "OwlParser.hpp"
@@ -54,46 +71,41 @@ r_suite
 	| r_use
 
 r_module
-	: r_module_head r_suite_list r_module_tail
-
-r_module_head
-	: 'module' r_qname '{'
-	{ parser->aModuleHead(); }
-
-r_module_tail
-	: '}'
-	{ parser->aModuleTail(); }
+	:	"module" r_qname
+		"{" { parser->aModuleHead(); }
+			r_suite_list
+		"}" { parser->aModuleTail(); }
 
 r_func
 	: r_func_type r_ident r_func_params r_func_body
 	{ parser->aFunc(); }
 
 r_func_params
-	: '(' r_param_list ')'
-	|
+	: "(" r_param_list ")"
 
 r_param_list
-	: r_param ',' r_param_list
+	: r_param "," r_param_list
+	| r_param
 	|
 
 r_param
 	: r_type r_ident r_param_default
 
 r_param_default
-	: '=' r_expr
+	: "=" r_expr
 	|
 
 r_use
-	: 'use' r_qname ';'
+	: "use" r_qname ";"
 	{ parser->aUse(); }
 
 r_qname
 	: r_ident
-	| r_qname '.' r_ident
+	| r_qname "." r_ident
 
 r_func_type
 	: r_type
-	| 'fn'
+	| "fn"
 
 r_func_body
 	: r_block
@@ -107,37 +119,37 @@ r_stmt
 	| r_assign
 
 r_block
-	: '{' r_stmt_list '}' { $$ = $2; }
+	: "{" r_stmt_list "}" { $$ = $2; }
 
 r_stmt_list
 	: r_stmt_list r_stmt
 	| { $$ = 0; }
 
 r_loop
-	: 'loop' r_block { $$ = 0; }
+	: "loop" r_block { $$ = 0; }
 
 r_if
-	: 'if' r_expr r_block r_if_else { $$ = 0; }
+	: "if" r_expr r_block r_if_else { $$ = 0; }
 
 r_if_else
-	: 'else' r_block { $$ = $2; }
-	| 'else' r_if { $$ = $2; }
+	: "else" r_block { $$ = $2; }
+	| "else" r_if { $$ = $2; }
 	| { $$ = 0; }
 
 r_ret
-	: 'ret' r_expr_opt ';' { $$ = 0; }
+	: "ret" r_expr_opt ";" { $$ = 0; }
 
 r_var
-	: r_var_type r_ident '=' r_expr ';' { $$ = 0; }
+	: r_var_type r_ident "=" r_expr ";" { $$ = 0; }
 
 r_var_type
 	: r_qname
 
 r_var_type
-	: 'my'
+	: "my"
 
 r_assign
-	: r_ident '=' r_expr ';' { $$ = 0; }
+	: r_ident "=" r_expr ";" { $$ = 0; }
 
 r_expr_opt
 	: r_expr

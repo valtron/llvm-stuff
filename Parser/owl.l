@@ -8,19 +8,18 @@
 %{
 	#include "OwlParser.hpp"
 	#include "owl.tab.h"
+	#include <iostream>
 	
 	#define YY_EXTRA_TYPE Parser::OwlParser*
 	#define YY_USER_ACTION yylloc->first_line = yylineno;
 	
 	#define YY_INPUT(buf, result, max_size) \
 	{ \
-		char c; \
-		(*yyextra->is) >> c; \
-		if(yyextra->is->eof()) \
+		if (yyextra->is->eof()) { \
 			result = YY_NULL; \
-		else { \
-			buf[0] = c; \
-			result = 1; \
+		} else { \
+			yyextra->is->read(buf, max_size); \
+			result = yyextra->is->gcount(); \
 		} \
 	}
 %}
@@ -32,9 +31,24 @@ ws		[ \t\v\n\f\r]
 
 %%
 
+"module"						return T_MODULE;
+"use"								return T_USE;
+"fn"								return T_FN;
+"my"								return T_MY;
+"loop"							return T_LOOP;
+"ret"								return T_RET;
+"if"								return T_IF;
+"else"							return T_ELSE;
 {alpha}{alnum}*"'"?	return ID;
 {digit}+						return NUM;
 {ws}								/* skip */;
+"."									return T_DOT;
+","									return T_COMMA;
+"{"									return T_BCL;
+"}"									return T_BCR;
+"("									return T_BRL;
+")"									return T_BRR;
+";"									return T_SEMI;
 .										/* ignore */;
 
 %%

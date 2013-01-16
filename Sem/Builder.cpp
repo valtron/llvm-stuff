@@ -4,7 +4,6 @@
 #include "../Parser/OwlParser.hpp"
 
 #include <string>
-#include <fstream>
 
 namespace Sem
 {
@@ -15,10 +14,8 @@ PackageBuilder::PackageBuilder(const std::string& name, const std::string& versi
 void
 PackageBuilder::parse(const std::string& filename)
 {
-	std::ifstream infile(filename.c_str());
-	Parser::OwlParser parser(this, &infile);
+	Parser::OwlParser parser(this, filename);
 	parser.parse();
-	infile.close();
 }
 
 void

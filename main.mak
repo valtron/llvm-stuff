@@ -15,7 +15,7 @@ MAIN=main.exe
 all: $(MAIN)
 
 test: all
-	@$(MAIN)
+	@$(MAIN) test.owl
 
 $(MAIN): $(OBJS)
 	@$(LD) $(LDFLAGS) -o $(MAIN) $(OBJS)

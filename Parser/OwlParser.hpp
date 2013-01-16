@@ -1,6 +1,6 @@
 #pragma once
 
-#include <istream>
+#include <fstream>
 #include <iostream>
 
 namespace Sem
@@ -21,16 +21,18 @@ namespace Parser
 class OwlParser
 {
 	Sem::PackageBuilder* builder;
+	const std::string& filename;
 	
 // Need to be public for lexer
 public:
 	void* scanner;
-	std::istream* is;
+	std::ifstream* is;
 	
 public:
-	OwlParser(Sem::PackageBuilder* builder, std::istream* is)
-		: builder(builder), is(is)
+	OwlParser(Sem::PackageBuilder* builder, const std::string& filename)
+		: builder(builder), filename(filename)
 	{
+		this->is = new std::ifstream(filename.c_str());
 		this->init_scanner();
 	}
 	
@@ -41,12 +43,14 @@ public:
 	
 	void error(int line, const char* msg)
 	{
-		
+		std::cerr << this->filename << ":" << line << ": " << msg << std::endl;
 	}
 	
 	~OwlParser()
 	{
 		this->destroy_scanner();
+		this->is->close();
+		delete this->is;
 	}
 	
 private:

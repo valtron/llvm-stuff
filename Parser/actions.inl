@@ -12,19 +12,19 @@ OwlParser::aModuleHead()
 void
 OwlParser::aModuleTail()
 {
-	std::cout << "module head" << std::endl;
+	std::cout << "module tail" << std::endl;
 }
 
 void
 OwlParser::aFunc()
 {
-	std::cout << "module head" << std::endl;
+	std::cout << "func" << std::endl;
 }
 
 void
 OwlParser::aUse()
 {
-	std::cout << "module head" << std::endl;
+	std::cout << "use" << std::endl;
 }
 
 }
