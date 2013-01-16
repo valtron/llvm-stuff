@@ -12,10 +12,12 @@ SRCS=$(CSRCS) $(CXXSRCS)
 OBJS=$(CSRCS:.c=.o) $(CXXSRCS:.cpp=.o)
 MAIN=main.exe
 
-test: $(MAIN)
+all: $(MAIN)
+
+test: all
 	@$(MAIN)
 
-main.exe: $(OBJS)
+$(MAIN): $(OBJS)
 	@$(LD) $(LDFLAGS) -o $(MAIN) $(OBJS)
 
 .cpp.o:
@@ -24,10 +26,10 @@ main.exe: $(OBJS)
 .c.o:
 	@$(CXX) -c $< $(CXXFLAGS) -Wno-error -Wno-all -Wno-fatal-errors -o $@
 
-Parser/lex.owl.c: Parser/Owl.l Parser/owl.tab.h
+Parser/lex.owl.c: Parser/owl.l Parser/owl.tab.h
 	@flex --outfile=Parser/lex.owl.c Parser/owl.l
 
-Parser/owl.tab.c Parser/owl.tab.h: Parser/owl.y
+Parser/owl.tab.c Parser/owl.tab.h: Parser/owl.y Parser/actions.inl
 	@bison --file-prefix=Parser/owl Parser/owl.y
 
 clean:

@@ -34,7 +34,7 @@ ws		[ \t\v\n\f\r]
 
 {alpha}{alnum}*"'"?	return ID;
 {digit}+						return NUM;
-ws									/* skip */;
+{ws}								/* skip */;
 .										/* ignore */;
 
 %%

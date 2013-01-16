@@ -1,6 +1,7 @@
 #pragma once
 
 #include <istream>
+#include <iostream>
 
 namespace Sem
 {
@@ -19,10 +20,11 @@ namespace Parser
 
 class OwlParser
 {
+	Sem::PackageBuilder* builder;
+	
+// Need to be public for lexer
 public:
 	void* scanner;
-	Sem::PackageBuilder* builder;
-	int result;
 	std::istream* is;
 	
 public:
@@ -42,15 +44,23 @@ public:
 		
 	}
 	
-	virtual ~OwlParser()
+	~OwlParser()
 	{
 		this->destroy_scanner();
 	}
 	
-// Defined in Owl.l
-protected:
+private:
+	// Defined in Owl.l
 	void init_scanner();
 	void destroy_scanner();
+	
+// Not really public, but needs to be accessible by the generated parser code.
+public:
+	// Defined in actions.inl
+	void aModuleHead();
+	void aModuleTail();
+	void aFunc();
+	void aUse();
 };
 
 }

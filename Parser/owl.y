@@ -58,12 +58,15 @@ r_module
 
 r_module_head
 	: 'module' r_qname '{'
+	{ parser->aModuleHead(); }
 
 r_module_tail
 	: '}'
+	{ parser->aModuleTail(); }
 
 r_func
 	: r_func_type r_ident r_func_params r_func_body
+	{ parser->aFunc(); }
 
 r_func_params
 	: '(' r_param_list ')'
@@ -82,6 +85,7 @@ r_param_default
 
 r_use
 	: 'use' r_qname ';'
+	{ parser->aUse(); }
 
 r_qname
 	: r_ident
@@ -152,3 +156,5 @@ r_ident
 %%
 
 #undef scanner
+
+#include "actions.inl"
