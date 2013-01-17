@@ -18,12 +18,17 @@ public:
 
 class Suite
 {
+public:
+	std::string name;
 	Module* parent;
+	
+	Suite(const std::string&, Module*);
 };
 
 class Module: public Suite
 {
-	
+public:
+	Module(const std::string&, Module*);
 };
 
 class Group: public Suite

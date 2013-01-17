@@ -7,7 +7,7 @@ LD := g++
 #LDFLAGS := -static-libgcc -static-libstdc++ $(LLVM_LDFLAGS)
 LDFLAGS := -static-libgcc -static-libstdc++
 CSRCS=Parser/lex.owl.c Parser/owl.tab.c
-CXXSRCS=main.cpp Sem/Builder.cpp Sem/Code.cpp Sem/Suite.cpp
+CXXSRCS=main.cpp Sem/Builder.cpp Sem/Code.cpp Sem/Suite.cpp Sem/Walker.cpp
 SRCS=$(CSRCS) $(CXXSRCS)
 OBJS=$(CSRCS:.c=.o) $(CXXSRCS:.cpp=.o)
 MAIN=main.exe

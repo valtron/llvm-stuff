@@ -8,7 +8,6 @@
 %{
 	#include "OwlParser.hpp"
 	#include "owl.tab.h"
-	#include <iostream>
 	
 	#define YY_EXTRA_TYPE Parser::OwlParser*
 	#define YY_USER_ACTION yylloc->first_line = yylineno;
@@ -39,7 +38,7 @@ ws		[ \t\v\n\f\r]
 "ret"								return T_RET;
 "if"								return T_IF;
 "else"							return T_ELSE;
-{alpha}{alnum}*"'"?	return ID;
+{alpha}{alnum}*"'"?	yylval->cstr = yytext; return ID;
 {digit}+						return NUM;
 {ws}								/* skip */;
 "."									return T_DOT;

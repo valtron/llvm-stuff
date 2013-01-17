@@ -14,6 +14,9 @@
 {
 	Sem::Stmt* stmt;
 	Sem::Expr* expr;
+	Sem::QName* qname;
+	Sem::IdentExpr* ident;
+	char* cstr;
 }
 
 %token ID NUM
@@ -36,7 +39,10 @@
 %token END 0 "end of file"
 
 %type <stmt> r_stmt r_block r_if r_ret r_var r_assign r_loop r_stmt_list r_if_else
-%type <expr> r_expr r_expr_opt r_ident
+%type <expr> r_expr r_expr_opt
+%type <qname> r_qname
+%type <ident> r_ident
+%type <cstr> ID
 
 %left "+" "-"
 %left "*" "/"
@@ -72,9 +78,11 @@ r_suite
 
 r_module
 	:	"module" r_qname
-		"{" { parser->aModuleHead(); }
+		"{" { parser->aModuleHead($2, false); }
 			r_suite_list
 		"}" { parser->aModuleTail(); }
+	| "module" r_qname ";"
+		{ parser->aModuleHead($2, true); }
 
 r_func
 	: r_func_type r_ident r_func_params r_func_body
@@ -100,8 +108,8 @@ r_use
 	{ parser->aUse(); }
 
 r_qname
-	: r_ident
-	| r_qname "." r_ident
+	: r_ident { $$ = parser->aQNameBegin($1); }
+	| r_qname "." r_ident { $$ = parser->aQNameAppend($1, $3); }
 
 r_func_type
 	: r_type
@@ -156,14 +164,14 @@ r_expr_opt
 	| { $$ = 0; }
 
 r_expr
-	: r_ident
+	: r_ident { $$ = $1; }
 	| NUM { $$ = 0; }
 
 r_type
 	: r_qname
 
 r_ident
-	: ID { $$ = 0; }
+	: ID { $$ = parser->aIdentMake($1); }
 
 %%
 

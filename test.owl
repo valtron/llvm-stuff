@@ -9,7 +9,9 @@ module Foo.Bar {
 		}
 	}
 	
-	module Boo {}
+	module Boo;
+	
+	module Baz;
 }
 
 module Cool {}

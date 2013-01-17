@@ -4,6 +4,7 @@
 #include "../Parser/OwlParser.hpp"
 
 #include <string>
+#include <iostream>
 
 namespace Sem
 {
