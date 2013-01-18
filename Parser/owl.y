@@ -1,4 +1,5 @@
 %code requires {
+	#include "../Sem/Suite.hpp"
 	#include "../Sem/Code.hpp"
 }
 
@@ -16,6 +17,9 @@
 	Sem::Expr* expr;
 	Sem::QName* qname;
 	Sem::IdentExpr* ident;
+	Sem::TypeRef* type;
+	Sem::ParamList* params;
+	Sem::Param* param;
 	char* cstr;
 }
 
@@ -38,10 +42,13 @@
 %token T_ELSE "else"
 %token END 0 "end of file"
 
-%type <stmt> r_stmt r_block r_if r_ret r_var r_assign r_loop r_stmt_list r_if_else
-%type <expr> r_expr r_expr_opt
+%type <stmt> r_stmt r_block r_if r_func_body r_ret r_var r_assign r_loop r_stmt_list r_if_else
+%type <expr> r_expr r_expr_opt r_param_default
 %type <qname> r_qname
 %type <ident> r_ident
+%type <type> r_type r_func_type r_var_type
+%type <params> r_param_list r_func_params
+%type <param> r_param
 %type <cstr> ID
 
 %left "+" "-"
@@ -86,22 +93,24 @@ r_module
 
 r_func
 	: r_func_type r_ident r_func_params r_func_body
-	{ parser->aFunc(); }
+	{ parser->aFunc($2, $1, $3, $4); }
 
 r_func_params
-	: "(" r_param_list ")"
+	: "(" r_param_list ")" { $$ = $2; }
+	| { $$ = 0; }
 
 r_param_list
-	: r_param "," r_param_list
-	| r_param
-	|
+	: r_param "," r_param_list { $$ = parser->aParamListAppend($3, $1); }
+	| r_param { $$ = parser->aParamListMake($1); }
+	| { $$ = parser->aParamListMake(0); }
 
 r_param
 	: r_type r_ident r_param_default
+	{ $$ = parser->aParamMake($1, $2, $3); }
 
 r_param_default
-	: "=" r_expr
-	|
+	: "=" r_expr { $$ = $2; }
+	| { $$ = 0; }
 
 r_use
 	: "use" r_qname ";"
@@ -113,7 +122,7 @@ r_qname
 
 r_func_type
 	: r_type
-	| "fn"
+	| "fn" { $$ = 0; }
 
 r_func_body
 	: r_block
@@ -151,10 +160,8 @@ r_var
 	: r_var_type r_ident "=" r_expr ";" { $$ = 0; }
 
 r_var_type
-	: r_qname
-
-r_var_type
-	: "my"
+	: r_type
+	| "my" { $$ = 0; }
 
 r_assign
 	: r_ident "=" r_expr ";" { $$ = 0; }
@@ -168,7 +175,7 @@ r_expr
 	| NUM { $$ = 0; }
 
 r_type
-	: r_qname
+	: r_qname { $$ = 0; }
 
 r_ident
 	: ID { $$ = parser->aIdentMake($1); }

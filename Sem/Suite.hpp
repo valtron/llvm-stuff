@@ -1,9 +1,11 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace Sem {
 
+class Stmt;
 class Module;
 
 class Package
@@ -36,14 +38,33 @@ class Group: public Suite
 	
 };
 
-class Param
+class TypeRef
 {
 	
 };
 
+class Param
+{
+public:
+	TypeRef* type;
+	std::string name;
+	Expr* dfault;
+};
+
+class ParamList
+{
+public:
+	std::vector<Param*> list;
+};
+
 class Func: public Suite
 {
+public:
+	TypeRef* ret_type;
+	ParamList* params;
+	Stmt* body;
 	
+	Func(const std::string&, Module*, TypeRef*, ParamList*, Stmt*);
 };
 
 class Use: public Suite
