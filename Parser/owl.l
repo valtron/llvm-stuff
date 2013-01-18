@@ -36,7 +36,7 @@ ws		[ \t\v\n\f\r]
 "if"								return T_IF;
 "else"							return T_ELSE;
 {alpha}{alnum}*"'"?	yylval->cstr = yytext; return ID;
-{digit}+						return NUM;
+{digit}+						yylval->cstr = yytext; return NUM;
 {ws}								/* skip */;
 "."									return T_DOT;
 ","									return T_COMMA;

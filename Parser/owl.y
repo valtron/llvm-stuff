@@ -14,6 +14,7 @@
 %union
 {
 	Sem::Stmt* stmt;
+	Sem::DoStmt* block;
 	Sem::Expr* expr;
 	Sem::QName* qname;
 	Sem::IdentExpr* ident;
@@ -42,14 +43,15 @@
 %token T_ELSE "else"
 %token END 0 "end of file"
 
-%type <stmt> r_stmt r_block r_if r_func_body r_ret r_var r_assign r_loop r_stmt_list r_if_else
+%type <stmt> r_stmt r_if r_func_body r_ret r_var r_assign r_loop r_if_else
+%type <block> r_block r_stmt_list
 %type <expr> r_expr r_expr_opt r_param_default
 %type <qname> r_qname
 %type <ident> r_ident
 %type <type> r_type r_func_type r_var_type
 %type <params> r_param_list r_func_params
 %type <param> r_param
-%type <cstr> ID
+%type <cstr> ID NUM
 
 %left "+" "-"
 %left "*" "/"
@@ -125,10 +127,10 @@ r_func_type
 	| "fn" { $$ = 0; }
 
 r_func_body
-	: r_block
+	: r_block { $$ = $1; }
 
 r_stmt
-	: r_block
+	: r_block { $$ = $1; }
 	| r_loop
 	| r_if
 	| r_ret
@@ -139,14 +141,15 @@ r_block
 	: "{" r_stmt_list "}" { $$ = $2; }
 
 r_stmt_list
-	: r_stmt_list r_stmt
-	| { $$ = 0; }
+	: r_stmt_list r_stmt { $$ = parser->aDoStmtAppend($1, $2); }
+	| { $$ = parser->aDoStmtMake(); }
 
 r_loop
-	: "loop" r_block { $$ = 0; }
+	: "loop" r_block { $$ = parser->aLoopStmtMake($2); }
 
 r_if
-	: "if" r_expr r_block r_if_else { $$ = 0; }
+	: "if" r_expr r_block r_if_else
+	{ $$ = parser->aIfStmtMake($2, $3, $4); }
 
 r_if_else
 	: "else" r_block { $$ = $2; }
@@ -154,17 +157,19 @@ r_if_else
 	| { $$ = 0; }
 
 r_ret
-	: "ret" r_expr_opt ";" { $$ = 0; }
+	: "ret" r_expr_opt ";" { $$ = parser->aRetStmtMake($2); }
 
 r_var
-	: r_var_type r_ident "=" r_expr ";" { $$ = 0; }
+	: r_var_type r_ident "=" r_expr ";"
+	{ $$ = parser->aVarDeclStmtMake($2, $1, $4); }
 
 r_var_type
 	: r_type
 	| "my" { $$ = 0; }
 
 r_assign
-	: r_ident "=" r_expr ";" { $$ = 0; }
+	: r_ident "=" r_expr ";"
+	{ $$ = parser->aAssignStmtMake($1, $3); }
 
 r_expr_opt
 	: r_expr
@@ -172,7 +177,7 @@ r_expr_opt
 
 r_expr
 	: r_ident { $$ = $1; }
-	| NUM { $$ = 0; }
+	| NUM { $$ = parser->aNumExprMake($1); }
 
 r_type
 	: r_qname { $$ = 0; }

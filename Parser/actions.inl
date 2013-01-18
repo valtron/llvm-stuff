@@ -57,7 +57,8 @@ OwlParser::aModuleTail()
 }
 
 void
-OwlParser::aFunc(Sem::IdentExpr* name, Sem::TypeRef* ret_type, Sem::ParamList* params, Sem::Stmt* body)
+OwlParser::aFunc
+(Sem::IdentExpr* name, Sem::TypeRef* ret_type, Sem::ParamList* params, Sem::Stmt* body)
 {
 	this->_emitSuite(new Sem::Func(
 		name->ident, this->_getTopModule(),
@@ -77,13 +78,50 @@ Sem::ParamList* OwlParser::aParamListMake(Sem::Param* param) const {
 	return params;
 }
 
-Sem::ParamList* OwlParser::aParamListAppend(Sem::ParamList* params, Sem::Param* param) const {
+Sem::ParamList* OwlParser::aParamListAppend
+(Sem::ParamList* params, Sem::Param* param) const {
 	params->add(param);
 	return params;
 }
 
-Sem::Param* OwlParser::aParamMake(Sem::TypeRef* type, Sem::IdentExpr* name, Sem::Expr* dfault) const {
+Sem::Param* OwlParser::aParamMake
+(Sem::TypeRef* type, Sem::IdentExpr* name, Sem::Expr* dfault) const {
 	return new Sem::Param(type, name->ident, dfault);
+}
+
+Sem::DoStmt* OwlParser::aDoStmtMake() const {
+	return new Sem::DoStmt();
+}
+
+Sem::DoStmt* OwlParser::aDoStmtAppend(Sem::DoStmt* block, Sem::Stmt* stmt) const {
+	block->stmts.push_back(stmt);
+	return block;
+}
+
+Sem::Stmt* OwlParser::aLoopStmtMake(Sem::Stmt* body) const {
+	return new Sem::LoopStmt(body);
+}
+
+Sem::Stmt* OwlParser::aIfStmtMake
+(Sem::Expr* cond, Sem::Stmt* then_body, Sem::Stmt* else_body) const {
+	return new Sem::IfStmt(cond, then_body, else_body);
+}
+
+Sem::Stmt* OwlParser::aVarDeclStmtMake
+(Sem::IdentExpr* var, Sem::TypeRef* type, Sem::Expr* rhs) const {
+	return new Sem::VarDeclStmt(var, type, rhs);
+}
+
+Sem::Stmt* OwlParser::aAssignStmtMake(Sem::IdentExpr* var, Sem::Expr* rhs) const {
+	return new Sem::AssignStmt(var, rhs);
+}
+
+Sem::Stmt* OwlParser::aRetStmtMake(Sem::Expr* retval) const {
+	return new Sem::RetStmt(retval);
+}
+
+Sem::Expr* OwlParser::aNumExprMake(const std::string& data) const {
+	return new Sem::NumExpr(data);
 }
 
 Sem::QName* OwlParser::aQNameBegin(Sem::IdentExpr* part) const {

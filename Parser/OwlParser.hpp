@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include <fstream>
 #include <iostream>
 
@@ -16,6 +17,7 @@ namespace Sem
 	class ParamList;
 	class TypeRef;
 	class Stmt;
+	class DoStmt;
 }
 
 namespace Parser
@@ -89,6 +91,14 @@ public:
 	void aUse();
 	Sem::ParamList* aParamListMake(Sem::Param*) const;
 	Sem::ParamList* aParamListAppend(Sem::ParamList*, Sem::Param*) const;
+	Sem::DoStmt* aDoStmtMake() const;
+	Sem::DoStmt* aDoStmtAppend(Sem::DoStmt*, Sem::Stmt*) const;
+	Sem::Stmt* aLoopStmtMake(Sem::Stmt*) const;
+	Sem::Stmt* aIfStmtMake(Sem::Expr*, Sem::Stmt*, Sem::Stmt*) const;
+	Sem::Stmt* aVarDeclStmtMake(Sem::IdentExpr*, Sem::TypeRef*, Sem::Expr*) const;
+	Sem::Stmt* aAssignStmtMake(Sem::IdentExpr*, Sem::Expr*) const;
+	Sem::Stmt* aRetStmtMake(Sem::Expr*) const;
+	Sem::Expr* aNumExprMake(const std::string&) const;
 	Sem::Param* aParamMake(Sem::TypeRef*, Sem::IdentExpr*, Sem::Expr*) const;
 	Sem::QName* aQNameBegin(Sem::IdentExpr*) const;
 	Sem::QName* aQNameAppend(Sem::QName*, Sem::IdentExpr*) const;
