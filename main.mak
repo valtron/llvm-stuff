@@ -1,13 +1,11 @@
-#LLVM_CONFIG := llvm-config
+LLVM_CONFIG := llvm-config
 CXX := g++ -c
-#CXXFLAGS := -g $(shell $(LLVM_CONFIG) --cppflags)
-CXXFLAGS := -g -std=c++0x
+CXXFLAGS := -g -std=c++0x $(shell $(LLVM_CONFIG) --cppflags)
 LD := g++
-#LLVM_LDFLAGS = $(shell llvm-config --libs core) $(shell llvm-config --ldflags)
-#LDFLAGS := -static-libgcc -static-libstdc++ $(LLVM_LDFLAGS)
-LDFLAGS := -static-libgcc -static-libstdc++
+LLVM_LDFLAGS = $(shell llvm-config --libs core) $(shell llvm-config --ldflags)
+LDFLAGS := -static-libgcc -static-libstdc++ $(LLVM_LDFLAGS)
 CSRCS=Parser/lex.owl.c Parser/owl.tab.c
-CXXSRCS=main.cpp Sem/Builder.cpp Sem/Code.cpp Sem/Suite.cpp Sem/Walker.cpp
+CXXSRCS=main.cpp Sem/Builder.cpp Sem/Code.cpp Sem/Suite.cpp Sem/Walker.cpp Codegen.cpp
 SRCS=$(CSRCS) $(CXXSRCS)
 OBJS=$(CSRCS:.c=.o) $(CXXSRCS:.cpp=.o)
 MAIN=main.exe
@@ -18,7 +16,7 @@ test: all
 	@$(MAIN) test.owl
 
 $(MAIN): $(OBJS)
-	@$(LD) $(LDFLAGS) -o $(MAIN) $(OBJS)
+	$(LD) $(OBJS) $(LDFLAGS) -o $(MAIN)
 
 .cpp.o:
 	@$(CXX) -c $< $(CXXFLAGS) -o $@
