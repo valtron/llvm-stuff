@@ -12,7 +12,7 @@ Sem::Module* OwlParser::_getTopModule() const {
 	if (this->modules.empty()) {
 		return 0;
 	}
-	return this->modules[this->modules.size() - 1].module;
+	return this->modules.back().module;
 }
 
 void OwlParser::_emitSuite(Sem::Suite*) {
@@ -31,9 +31,8 @@ OwlParser::aModuleHead(Sem::QName* qname, bool stub)
 	
 	Sem::Module* mod = this->_getTopModule();
 	
-	const Sem::QName::ListType& parts = qname->parts();
-	for (Sem::QName::ListType::const_iterator i = parts.begin(); i != parts.end(); ++i) {
-		mod = new Sem::Module((*i)->ident, mod);
+	for (auto ident: qname->parts()) {
+		mod = new Sem::Module(ident->ident, mod);
 		this->_emitSuite(mod);
 	}
 	
