@@ -57,15 +57,33 @@ OwlParser::aModuleTail()
 }
 
 void
-OwlParser::aFunc()
+OwlParser::aFunc(Sem::IdentExpr* name, Sem::TypeRef* ret_type, Sem::ParamList* params, Sem::Stmt* body)
 {
-	std::cout << "func" << std::endl;
+	this->_emitSuite(new Sem::Func(
+		name->ident, this->_getTopModule(),
+		ret_type, params, body
+	));
 }
 
 void
 OwlParser::aUse()
 {
 	std::cout << "use" << std::endl;
+}
+
+Sem::ParamList* OwlParser::aParamListMake(Sem::Param* param) const {
+	auto params = new Sem::ParamList();
+	params->add(param);
+	return params;
+}
+
+Sem::ParamList* OwlParser::aParamListAppend(Sem::ParamList* params, Sem::Param* param) const {
+	params->add(param);
+	return params;
+}
+
+Sem::Param* OwlParser::aParamMake(Sem::TypeRef* type, Sem::IdentExpr* name, Sem::Expr* dfault) const {
+	return new Sem::Param(type, name->ident, dfault);
 }
 
 Sem::QName* OwlParser::aQNameBegin(Sem::IdentExpr* part) const {

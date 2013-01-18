@@ -12,6 +12,9 @@ namespace Sem
 	class QName;
 	class Expr;
 	class IdentExpr;
+	class Param;
+	class ParamList;
+	class TypeRef;
 	class Stmt;
 }
 
@@ -82,8 +85,11 @@ public:
 	// Defined in actions.inl
 	void aModuleHead(Sem::QName*, bool);
 	void aModuleTail();
-	void aFunc();
+	void aFunc(Sem::IdentExpr*, Sem::TypeRef*, Sem::ParamList*, Sem::Stmt*);
 	void aUse();
+	Sem::ParamList* aParamListMake(Sem::Param*) const;
+	Sem::ParamList* aParamListAppend(Sem::ParamList*, Sem::Param*) const;
+	Sem::Param* aParamMake(Sem::TypeRef*, Sem::IdentExpr*, Sem::Expr*) const;
 	Sem::QName* aQNameBegin(Sem::IdentExpr*) const;
 	Sem::QName* aQNameAppend(Sem::QName*, Sem::IdentExpr*) const;
 	Sem::IdentExpr* aIdentMake(char*) const;

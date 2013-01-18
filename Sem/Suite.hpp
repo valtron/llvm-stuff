@@ -5,6 +5,7 @@
 
 namespace Sem {
 
+class Expr;
 class Stmt;
 class Module;
 
@@ -49,12 +50,23 @@ public:
 	TypeRef* type;
 	std::string name;
 	Expr* dfault;
+	
+	Param(TypeRef*, const std::string&, Expr*);
 };
 
 class ParamList
 {
-public:
 	std::vector<Param*> list;
+public:
+	
+	typedef std::vector<Param*>::reverse_iterator iterator;
+	typedef std::vector<Param*>::const_reverse_iterator const_iterator;
+	
+	void add(Param*);
+	iterator begin();
+	const_iterator begin() const;
+	iterator end();
+	const_iterator end() const;
 };
 
 class Func: public Suite
