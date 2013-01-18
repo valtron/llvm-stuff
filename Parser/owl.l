@@ -1,9 +1,7 @@
 %option reentrant
 %option prefix="owl"
-%option bison-bridge
-%option bison-locations
-%option noyywrap
-%option yylineno
+%option bison-bridge bison-locations
+%option noyywrap yylineno batch never-interactive
 
 %{
 	#include "OwlParser.hpp"
@@ -12,8 +10,7 @@
 	#define YY_EXTRA_TYPE Parser::OwlParser*
 	#define YY_USER_ACTION yylloc->first_line = yylineno;
 	
-	#define YY_INPUT(buf, result, max_size) \
-	{ \
+	#define YY_INPUT(buf, result, max_size) { \
 		if (yyextra->is->eof()) { \
 			result = YY_NULL; \
 		} else { \

@@ -1,7 +1,7 @@
 #LLVM_CONFIG := llvm-config
 CXX := g++ -c
 #CXXFLAGS := -g $(shell $(LLVM_CONFIG) --cppflags)
-CXXFLAGS := -g
+CXXFLAGS := -g -std=c++0x
 LD := g++
 #LLVM_LDFLAGS = $(shell llvm-config --libs core) $(shell llvm-config --ldflags)
 #LDFLAGS := -static-libgcc -static-libstdc++ $(LLVM_LDFLAGS)
@@ -21,7 +21,7 @@ $(MAIN): $(OBJS)
 	@$(LD) $(LDFLAGS) -o $(MAIN) $(OBJS)
 
 .cpp.o:
-	@$(CXX) -c $< $(CXXFLAGS) -std=c++0x -o $@
+	@$(CXX) -c $< $(CXXFLAGS) -o $@
 
 .c.o:
 	@$(CXX) -c $< $(CXXFLAGS) -Wno-error -Wno-all -Wno-fatal-errors -o $@
