@@ -12,23 +12,25 @@ MAIN=main.exe
 
 all: $(MAIN)
 
+.PHONY: all clean test
+
 test: all
-	@$(MAIN) test.owl
+	$(MAIN) test.owl
 
 $(MAIN): $(OBJS)
 	$(LD) $(OBJS) $(LDFLAGS) -o $(MAIN)
 
 .cpp.o:
-	@$(CXX) -c $< $(CXXFLAGS) -o $@
+	$(CXX) -c $< $(CXXFLAGS) -o $@
 
 .c.o:
-	@$(CXX) -c $< $(CXXFLAGS) -Wno-error -Wno-all -Wno-fatal-errors -o $@
+	$(CXX) -c $< $(CXXFLAGS) -Wno-error -Wno-all -Wno-fatal-errors -o $@
 
 Parser/lex.owl.c: Parser/owl.l Parser/owl.tab.h
-	@flex --outfile=Parser/lex.owl.c Parser/owl.l
+	flex --outfile=Parser/lex.owl.c Parser/owl.l
 
 Parser/owl.tab.c Parser/owl.tab.h: Parser/owl.y Parser/actions.inl
-	@bison --file-prefix=Parser/owl Parser/owl.y
+	bison --file-prefix=Parser/owl Parser/owl.y
 
 clean:
 	rm -v `find . \( -name "*.o" -o -name "*.exe" \)`
