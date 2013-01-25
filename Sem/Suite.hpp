@@ -26,6 +26,7 @@ public:
 	Module* parent;
 	
 	Suite(const std::string&, Module*);
+	virtual ~Suite() = 0;
 };
 
 class Module: public Suite

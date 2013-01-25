@@ -8,8 +8,15 @@ namespace Sem
 
 class TypeRef;
 
-class Stmt {};
-class Expr {};
+class Stmt {
+public:
+	virtual ~Stmt() = 0;
+};
+
+class Expr {
+public:
+	virtual ~Expr() = 0;
+};
 
 class DoStmt: public Stmt
 {

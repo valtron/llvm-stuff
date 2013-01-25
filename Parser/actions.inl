@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "../Sem/Builder.hpp"
 #include "../Sem/Suite.hpp"
 #include "../Sem/Code.hpp"
 
@@ -15,8 +16,8 @@ Sem::Module* OwlParser::_getTopModule() const {
 	return this->modules.back().module;
 }
 
-void OwlParser::_emitSuite(Sem::Suite*) {
-	// TODO
+void OwlParser::_emitSuite(Sem::Suite* suite) {
+	this->builder->add(suite);
 }
 
 void

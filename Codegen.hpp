@@ -3,6 +3,7 @@
 namespace Sem {
 	class PackageBuilder;
 	class Package;
+	class Func;
 }
 
 namespace llvm {
@@ -20,6 +21,9 @@ class Compiler
 public:
 	Compiler(Sem::PackageBuilder*);
 	llvm::Module* compile();
+	
+private:
+	void compileFunc(Sem::Func*);
 };
 
 }

@@ -3,6 +3,9 @@
 namespace Sem
 {
 
+Stmt::~Stmt() {}
+Expr::~Expr() {}
+
 IdentExpr::IdentExpr(const std::string& ident): ident(ident) {}
 
 QName::QName(const IdentExpr* part) {
