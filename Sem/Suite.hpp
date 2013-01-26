@@ -63,6 +63,8 @@ public:
 	typedef std::vector<Param*>::reverse_iterator iterator;
 	typedef std::vector<Param*>::const_reverse_iterator const_iterator;
 	
+	Param* operator[](int);
+	
 	void add(Param*);
 	iterator begin();
 	const_iterator begin() const;

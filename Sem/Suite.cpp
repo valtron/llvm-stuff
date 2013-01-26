@@ -18,6 +18,10 @@ Func::Func(const std::string& name, Module* parent, TypeRef* ret_type, ParamList
 Param::Param(TypeRef* type, const std::string& name, Expr* dfault)
 	: type(type), name(name), dfault(dfault) {}
 
+Param* ParamList::operator[](int i) {
+	return this->list[(this->list.size() - 1) - i];
+}
+
 void ParamList::add(Param* param) {
 	this->list.push_back(param);
 }

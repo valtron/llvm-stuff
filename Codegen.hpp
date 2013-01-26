@@ -4,10 +4,12 @@ namespace Sem {
 	class PackageBuilder;
 	class Package;
 	class Func;
+	class TypeRef;
 }
 
 namespace llvm {
 	class Module;
+	class Type;
 }
 
 namespace Codegen
@@ -24,6 +26,7 @@ public:
 	
 private:
 	void compileFunc(Sem::Func*);
+	llvm::Type* lookupType(Sem::TypeRef*);
 };
 
 }
