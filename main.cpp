@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <llvm/Module.h>
+#include <llvm/LLVMContext.h>
 
 #include "Sem/Builder.hpp"
 #include "Codegen.hpp"
@@ -18,7 +19,8 @@ int main(int argc, char** argv)
 		builder.parse(argv[i]);
 	}
 	
-	Codegen::Compiler compiler(&builder);
+	auto& lctx = llvm::getGlobalContext();
+	Codegen::Compiler compiler(&builder, lctx);
 	auto compiled = compiler.compile();
 	
 	compiled->dump();
