@@ -1,6 +1,0 @@
-bin/
-*.o
-*.exe
-Parser/*.tab.c
-Parser/*.tab.h
-Parser/lex.*.c
